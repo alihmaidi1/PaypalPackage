@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paypal", "Paypal\Paypal.csproj", "{F56D4F6B-159A-414C-B765-625EFF1EAE29}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paypal.Tests", "Paypal.Tests\Paypal.Tests.csproj", "{04FB0037-6330-4183-9E23-98CDA009A27E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{F56D4F6B-159A-414C-B765-625EFF1EAE29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F56D4F6B-159A-414C-B765-625EFF1EAE29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F56D4F6B-159A-414C-B765-625EFF1EAE29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04FB0037-6330-4183-9E23-98CDA009A27E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04FB0037-6330-4183-9E23-98CDA009A27E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04FB0037-6330-4183-9E23-98CDA009A27E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04FB0037-6330-4183-9E23-98CDA009A27E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
