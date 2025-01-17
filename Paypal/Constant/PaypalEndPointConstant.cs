@@ -8,4 +8,8 @@ public class PaypalEndPointConstant
 {
     
     public static string GetTokenInfo="/v1/oauth2/token";
+
+    public static string CreateOrder="/v2/checkout/orders";
+
+
 }

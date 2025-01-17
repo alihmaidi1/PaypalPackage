@@ -1,4 +1,7 @@
+using System.Net.Http.Json;
+using System.Text.Encodings.Web;
 using System.Text.Json;
+using Paypal.Abstraction;
 using Paypal.Constant;
 using Paypal.Dto;
 using Paypal.Dto.Authentication;
@@ -8,7 +11,7 @@ using Paypal.Helpers;
 namespace Paypal.Authentication;
 
 
-public class PaypalAuthentication: IDisposable
+public class PaypalAuthentication: HttpClientDisposeAbstraction
 {
 
     private  string mode{get;set;}
@@ -16,9 +19,8 @@ public class PaypalAuthentication: IDisposable
 
     private string clientSecret{get;set;}
 
-    private  HttpClient httpClient{get;set;}
+    // private  HttpClient httpClient{get;set;}
 
-    private bool isDisposed{get;set;}=false;
 
     public PaypalAuthentication(string clientId,string clientSecret,PaypalApplicationMode mode){
 
@@ -52,8 +54,9 @@ public class PaypalAuthentication: IDisposable
         var httpResponse = await httpClient.SendAsync(request);
         if(httpResponse.IsSuccessStatusCode){
 
-            var jsonResponse = await httpResponse.Content.ReadAsStringAsync();
-            PaypalAccessTokenDto? response = JsonSerializer.Deserialize<PaypalAccessTokenDto>(jsonResponse);
+            var jsonResponse = await httpResponse.Content.ReadAsStringAsync();            
+            
+            PaypalAccessTokenDto? response = JsonSerializer.Deserialize<PaypalAccessTokenDto>(jsonResponse);            
             return PaypalResponseResult.Success(response);
 
 
@@ -65,34 +68,5 @@ public class PaypalAuthentication: IDisposable
         }
 
         
-    }
-
-    ~PaypalAuthentication(){
-
-        Dispose(false);
-    }
-
-    public void Dispose()
-    {
-
-        Dispose(true);
-        GC.SuppressFinalize(this);
-
-    }
-
-
-
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (isDisposed)
-            return;
-
-        if(disposing){
-
-            this.httpClient?.Dispose();
-
-        }
-        isDisposed=true;
     }
 }

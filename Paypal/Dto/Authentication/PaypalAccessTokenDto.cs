@@ -2,17 +2,17 @@ namespace Paypal.Dto.Authentication;
 public class PaypalAccessTokenDto
 {
 
-    public string scope {get;}
+    public string scope {get;set;}
 
-    public string accessToken{get;}
+    public string access_token{get;set;}
 
-    public string tokenType{get;}
+    public string token_type{get;set;}
 
-    public string appId{get;}
+    public string app_id{get;set;}
     
-    public int expiresIn{get;}
+    public int expires_in{get;set;}
 
-    public string nonce{get;}
+    public string nonce{get;set;}
 
 
 }
