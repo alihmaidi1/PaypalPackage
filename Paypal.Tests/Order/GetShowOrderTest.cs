@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Cache;
 using System.Threading.Tasks;
 using Paypal.Order;
 using Paypal.Tests.Constant;
@@ -17,12 +18,17 @@ public class GetShowOrderTest
     {
 
         // Given
-        string orderId="5O190127TN364715T";
+        string orderId="862315322K150770A";
         PaypalOrder order=new PaypalOrder(Credential.ClientId,Credential.ClientSecret,Enum.PaypalApplicationMode.Sandbox);
         
         // When
         var response=await order.ShowOrder(orderId);
         
+        if(!response.Status){
+
+            Console.WriteLine(response.Message);
+
+        }
         // Then
         Assert.True(response.Status);
 

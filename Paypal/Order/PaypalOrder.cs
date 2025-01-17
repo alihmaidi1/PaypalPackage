@@ -1,5 +1,3 @@
-
-using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -49,7 +47,7 @@ public  class PaypalOrder:HttpClientDisposeAbstraction
             }
         });
         var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
-        var response = await httpClient.PostAsync(PaypalAuthenticationHelper.GetBaseUrl(mode)+PaypalEndPointConstant.CreateOrder, content);
+        var response = await httpClient.PostAsync(PaypalAuthenticationHelper.GetBaseUrl(mode)+PaypalEndPointConstant.Order, content);
         if(!response.IsSuccessStatusCode){
 
             return PaypalResponseResult.Failed<CreateOrderResponse?>(await response.Content.ReadAsStringAsync());
@@ -73,7 +71,7 @@ public  class PaypalOrder:HttpClientDisposeAbstraction
         HttpRequestMessage request=new HttpRequestMessage{
 
 
-            RequestUri=new Uri(PaypalAuthenticationHelper.GetBaseUrl(mode)+PaypalEndPointConstant.ShowOrder+orderId),
+            RequestUri=new Uri(PaypalAuthenticationHelper.GetBaseUrl(mode)+PaypalEndPointConstant.Order+orderId),
             Method=HttpMethod.Get,
             Headers={
 
@@ -99,6 +97,39 @@ public  class PaypalOrder:HttpClientDisposeAbstraction
 
         }
 
+
+
+    }
+
+
+    public async Task<PaypalResponse<Object>> UpdateOrder<T>(string orderId,List<UpdateOrderRequest<T>> updateRequest){
+
+        
+        var tokenInfo=await new PaypalAuthentication(clientId,clientSecret,mode).GetAccessTokenInfo();
+        if(!tokenInfo.Status){
+
+            return PaypalResponseResult.Failed<Object>("Credential is not correct");
+        }
+        httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {tokenInfo.Result?.access_token}");
+        httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+
+        string jsonRequest =JsonSerializer.Serialize(updateRequest,new JsonSerializerOptions{
+
+            Converters={
+                new JsonStringEnumConverter()
+            }
+        });
+
+        var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+        var response = await httpClient.PatchAsync(PaypalAuthenticationHelper.GetBaseUrl(mode)+PaypalEndPointConstant.Order+orderId, content);
+
+        if(!response.IsSuccessStatusCode){
+
+            return PaypalResponseResult.Failed<Object>(await response.Content.ReadAsStringAsync());
+        }else{
+            return PaypalResponseResult.Success<Object>();
+
+        }
 
 
     }

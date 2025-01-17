@@ -8,7 +8,7 @@ namespace Paypal.Helpers;
 public class  PaypalResponseResult
 {
 
-    public static PaypalResponse<T> Success<T>(T data)
+    public static PaypalResponse<T> Success<T>(T data= default)
             => new PaypalResponse<T>() { Result = data,Status=true };
 
         public static PaypalResponse<T> Failed<T>(string message)
