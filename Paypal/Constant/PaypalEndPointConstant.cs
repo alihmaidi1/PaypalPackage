@@ -11,5 +11,7 @@ public class PaypalEndPointConstant
 
     public static string CreateOrder="/v2/checkout/orders";
 
+    public static string ShowOrder="/v2/checkout/orders/";
+
 
 }

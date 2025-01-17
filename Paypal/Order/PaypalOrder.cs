@@ -1,6 +1,8 @@
 
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Paypal.Abstraction;
 using Paypal.Authentication;
 using Paypal.Constant;
@@ -40,8 +42,12 @@ public  class PaypalOrder:HttpClientDisposeAbstraction
 
         httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {tokenInfo.Result?.access_token}");
         httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-        string jsonRequest =JsonSerializer.Serialize(createOrderRequest);
+        string jsonRequest =JsonSerializer.Serialize(createOrderRequest,new JsonSerializerOptions{
 
+            Converters={
+                new JsonStringEnumConverter()
+            }
+        });
         var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
         var response = await httpClient.PostAsync(PaypalAuthenticationHelper.GetBaseUrl(mode)+PaypalEndPointConstant.CreateOrder, content);
         if(!response.IsSuccessStatusCode){
@@ -50,12 +56,53 @@ public  class PaypalOrder:HttpClientDisposeAbstraction
         }else{
             var jsonResponse = await response.Content.ReadAsStringAsync();
             CreateOrderResponse? data=JsonSerializer.Deserialize<CreateOrderResponse>(jsonResponse);
-            Console.WriteLine(jsonResponse);
             return PaypalResponseResult.Success<CreateOrderResponse?>(data);
 
         }
     
     }
+
+
+    public async Task<PaypalResponse<CreateOrderResponse?>> ShowOrder(string orderId){
+
+        var tokenInfo=await new PaypalAuthentication(clientId,clientSecret,mode).GetAccessTokenInfo();
+        if(!tokenInfo.Status){
+
+            return PaypalResponseResult.Failed<CreateOrderResponse?>("Credential is not correct");
+        }
+        HttpRequestMessage request=new HttpRequestMessage{
+
+
+            RequestUri=new Uri(PaypalAuthenticationHelper.GetBaseUrl(mode)+PaypalEndPointConstant.ShowOrder+orderId),
+            Method=HttpMethod.Get,
+            Headers={
+
+                { "Authorization", $"Bearer {tokenInfo.Result?.access_token}" }
+            },
+            Content=new FormUrlEncodedContent(new List<KeyValuePair<string, string>>())
+
+
+        };
+        var httpResponse = await httpClient.SendAsync(request);
+        if(httpResponse.IsSuccessStatusCode){
+
+            var jsonResponse = await httpResponse.Content.ReadAsStringAsync();            
+            
+            CreateOrderResponse? response = JsonSerializer.Deserialize<CreateOrderResponse>(jsonResponse);            
+            return PaypalResponseResult.Success(response);
+
+
+        }else{
+
+            var errorMessage = await httpResponse.Content.ReadAsStringAsync();
+            return PaypalResponseResult.Failed<CreateOrderResponse?>(errorMessage);
+
+        }
+
+
+
+    }
+
 
     
 }

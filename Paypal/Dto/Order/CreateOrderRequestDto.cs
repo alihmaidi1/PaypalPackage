@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Paypal.Enum;
 
 namespace PayPalIntegration;
 
@@ -8,7 +9,7 @@ public class CreateOrderRequest
     /// <summary>
     /// Required: The intent of the payment (AUTHORIZE,CAPTURE) 
     /// </summary> 
-    public required string  intent { get; set; }
+    public required PaypalIntent  intent { get; set; }
 
     /// <summary>
     /// Required: An array of purchase units. Each purchase unit establishes a contract between a payer and the payee. Each purchase unit represents either a full or partial order that the payer intends to purchase from the payee.
@@ -71,7 +72,7 @@ public class ExperienceContext{
     /// <item>PAY_NOW</item>
     /// </list>
     /// </remarks>
-    public string? user_action{get;set;}
+    public PaypalUserAction? user_action{get;set;}
 
     /// <summary>
     /// The type of landing page to show on the PayPal site for customer checkout.

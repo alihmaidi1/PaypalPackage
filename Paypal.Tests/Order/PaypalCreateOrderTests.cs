@@ -1,20 +1,21 @@
+using Paypal.Enum;
 using Paypal.Order;
 using Paypal.Tests.Constant;
 using PayPalIntegration;
 
 namespace Paypal.Tests.Order;
 
-public class PaypalOrderTests
+public class PaypalCreateOrderTests
 {
 
     [Fact]
-    public async Task CreatePaymentTest()
+    public async Task CreatePayment_With_Minimal_Attribute_Test()
     {
         // Given
         PaypalOrder order=new PaypalOrder(Credential.ClientId,Credential.ClientSecret,Enum.PaypalApplicationMode.Sandbox);
          var request = new CreateOrderRequest
                 {
-                    intent = "CAPTURE",
+                    intent = PaypalIntent.CAPTURE,
                     purchase_units=new List<Transaction>(){
                         
                         new Transaction(){
@@ -42,7 +43,6 @@ public class PaypalOrderTests
                     
                 };
                     
-        // CreateOrderRequest request=new CreateOrderRequest();
         // When
         var response=await order.CreatePayment(request);
 
@@ -54,5 +54,6 @@ public class PaypalOrderTests
         Assert.True(response.Status);
         
     }
+    
     
 }
